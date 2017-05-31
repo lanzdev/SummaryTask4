@@ -9,6 +9,8 @@ import com.lanzdev.domain.entity.User;
 import com.lanzdev.util.validator.UserInputValidator;
 import org.apache.log4j.Logger;
 
+import java.util.Arrays;
+
 public class AddUserCommand extends FrontCommand {
 
     private static final Logger LOGGER = Logger.getLogger(AddUserCommand.class);
@@ -19,6 +21,14 @@ public class AddUserCommand extends FrontCommand {
         LOGGER.debug("Entering doGet()");
 
         checkOnError();
+
+        String desiredPermission = request.getParameter("desired_permission");
+        Permission[] permissions = Permission.values();
+        request.setAttribute("permissions", permissions);
+
+        request.setAttribute("desired_permission", desiredPermission);
+
+        LOGGER.trace("permissions: " + Arrays.toString(permissions));
 
         LOGGER.debug("Leaving doGet()");
         return Path.FORWARD_TO_ADD_USER_FORM;
@@ -49,6 +59,7 @@ public class AddUserCommand extends FrontCommand {
             UserDao dao = new MysqlUserDao();
             user = dao.create(user);
             request.setAttribute("user", user);
+
             LOGGER.trace("The user with id " + user.getId() + " added.");
         } else {
             LOGGER.trace("Fields failed validation.");

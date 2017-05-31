@@ -4,6 +4,10 @@ import com.lanzdev.domain.Identified;
 
 import java.io.Serializable;
 
+/**
+ * Representation of journal entity from db.
+ * Contains all information about journal entity.
+ */
 public class Journal implements Identified<Integer>, Serializable {
 
     private static final long serialVersionUID = 2779728401129970549L;
@@ -11,7 +15,7 @@ public class Journal implements Identified<Integer>, Serializable {
     private Integer id;
     private Integer courseId;
     private Integer studentId;
-    private Integer mark;
+    private Double mark;
 
     @Override
     public Integer getId( ) {
@@ -38,11 +42,11 @@ public class Journal implements Identified<Integer>, Serializable {
         this.studentId = studentId;
     }
 
-    public Integer getMark( ) {
+    public Double getMark( ) {
         return mark;
     }
 
-    public void setMark(Integer mark) {
+    public void setMark(Double mark) {
         this.mark = mark;
     }
 

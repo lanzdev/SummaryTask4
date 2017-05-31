@@ -4,6 +4,9 @@ import com.lanzdev.domain.entity.Course;
 import com.lanzdev.domain.entity.Journal;
 import com.lanzdev.domain.entity.Subject;
 
+/**
+ * Necessary for getting {@link Course} with information about students mark
+ */
 public class ProgressCortege {
 
     public final Course course;

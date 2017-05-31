@@ -1,0 +1,136 @@
+body {
+    margin: 0 auto;
+    padding: 0;
+    background-color: #E0F7FA;
+}
+
+form {
+    margin: 0;
+}
+
+.container {
+    width: 80%;
+    margin: 30px auto;
+}
+
+.header-container {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.login-container {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.header {
+    width: 100%;
+    background-color: #B2EBF2;
+    /*height: 80px;*/
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 1px 1px #006064;
+}
+
+.error-wrap {
+    background-color: #FFAB91;
+    padding: 20px;
+    font-size: 1.4em;
+    border: 2px solid #FF3D00;
+    margin-bottom: 20px;
+}
+
+.header h2 {
+    text-align: center;
+}
+
+.header h2, .header .right, .header .right * {
+    display: inline-block;
+}
+
+.header .right {
+    float: right;
+    margin-right: 20px;
+}
+
+.header .lang-list .lang {
+    padding: 0;
+    margin-right: 20px;
+}
+
+.header .lang-list .lang form {
+    padding: 0;
+    margin: 0;
+}
+
+.header .lang-list ul.lang li input[type="image"] {
+    height: 20px;
+}
+
+
+.form-container form,
+.login-container form {
+    background-color: #B3E5FC;
+    border: 1px solid #81D4FA;
+    width: 25%;
+    margin: 0 auto;
+    padding: 10px;
+    text-align: center;
+}
+
+.form-container form .form-field,
+.login-container form .login-field {
+    margin-bottom: 10px;
+}
+
+.form-container form .form-field input,
+.form-container form .form-field select,
+.login-container form .login-field input,
+.login-container form .login-field select {
+    width: 70%;
+}
+
+.form-container form input[type="submit"],
+.login-container form input[type="submit"] {
+    background-color: #AEEA00;
+    width: 70%;
+    border: none;
+    padding: 10px;
+    margin: 10px;
+}
+
+.form-container form input[type="submit"]:hover,
+.login-container form input[type="submit"]:hover {
+    background-color: #64DD17;
+}
+
+.navbar {
+    width: 15%;
+    float: left;
+}
+
+.content {
+    margin-left: 10px;
+    width: 82%;
+    float: right;
+}
+
+.navbar .content {
+    display: inline-block;
+}
+
+.table {
+    border-collapse: collapse;
+}
+
+.table, .table th, .table td {
+    border: 1px solid black;
+}
+
+.table th, .table td {
+    padding: 5px;
+}
+
+.sorter {
+    margin-bottom: 10px;
+}

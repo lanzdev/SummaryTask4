@@ -10,6 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Ancestor for all command classes. Contains all necessary information for convenient
+ * work with resources gotten from servlet. Requires to override methods {@link FrontCommand#doGet()}
+ * and {@link FrontCommand#doPost()}
+ */
 public abstract class FrontCommand implements Command {
 
     private static final Logger LOGGER = Logger.getLogger(FrontCommand.class);
@@ -49,16 +54,36 @@ public abstract class FrontCommand implements Command {
         return path;
     }
 
+    /**
+     * Checks is there any errors in request parameters.
+     * If there are - attaches attribute to request with error message.
+     */
     protected final void checkOnError() {
 
         if (request.getParameter("error") != null) {
             String error = request.getParameter("error");
-            LOGGER.warn("request contains error: " + error);
-            String errorMessage = "Error: " + error;
-            request.setAttribute("errorMessage", errorMessage);
+            String lang = (String) request.getSession().getAttribute("lang");
+            if (lang == null || lang.equals("en")) {
+                if (error.equals("not_valid")) {
+                    request.setAttribute("error_message", "Input values has failed validation. Try again.");
+                }
+            } else if (lang.equals("ru")) {
+                if (error.equals("not_valid")) {
+                    request.setAttribute("error_message", "Входные данных не прошли проверку. Попробуйте заново.");
+                }
+            }
         }
     }
 
+    /**
+     * Method which will be called if {@link ActionType} in {@link FrontCommand#execute()} is GET
+     * @return path for next manipulations with it from outside
+     */
     protected abstract String doGet();
+
+    /**
+     * Method which will be called if {@link ActionType} in {@link FrontCommand#execute()} is POST
+     * @return path for next manipulations with it from outside
+     */
     protected abstract String doPost();
 }

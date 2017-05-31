@@ -26,14 +26,14 @@ public class ListDoneCoursesCommand extends FrontCommand {
         List<ProgressCortege> list = dao.getDoneCourses(student);
         LOGGER.trace("List of done courses contains " + list.size() + " items.");
 
-        request.setAttribute("progress_cortege", list);
+        request.getSession().setAttribute("progress_cortege", list);
 
         LOGGER.debug("Leaving doGet()");
-        return Path.FORWARD_TO_VIEW_PROGRESS_LIST;
+        return Path.FORWARD_TO_VIEW_PROGRESS;
     }
 
     @Override
     protected String doPost( ) {
-        return Path.REDIRECT_TO_VIEW_PROGRESS_LIST;
+        return Path.REDIRECT_TO_VIEW_PROGRESS;
     }
 }

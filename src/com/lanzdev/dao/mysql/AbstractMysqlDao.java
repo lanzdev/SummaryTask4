@@ -9,6 +9,12 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Override methods from {@link GenericDao} and defines its logic
+ * thus it can be used by inheritors without overriding
+ * @param <T> type of object which is going to be used by dao
+ * @param <PK> type of primary key
+ */
 public abstract class AbstractMysqlDao<T extends Identified<PK>, PK> implements GenericDao<T, PK> {
 
     private static final Logger LOGGER = Logger.getLogger(AbstractMysqlDao.class);

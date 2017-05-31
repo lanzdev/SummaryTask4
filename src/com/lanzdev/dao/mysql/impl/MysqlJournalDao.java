@@ -1,16 +1,21 @@
 package com.lanzdev.dao.mysql.impl;
 
+import com.lanzdev.dao.ConnectionPool;
 import com.lanzdev.dao.entity.JournalDao;
 import com.lanzdev.dao.mysql.AbstractMysqlDao;
 import com.lanzdev.dao.mysql.Query;
+import com.lanzdev.domain.entity.Course;
 import com.lanzdev.domain.entity.Journal;
+import com.lanzdev.domain.entity.User;
 import org.apache.log4j.Logger;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class MysqlJournalDao extends AbstractMysqlDao<Journal, Integer>
         implements JournalDao {
@@ -58,7 +63,7 @@ public class MysqlJournalDao extends AbstractMysqlDao<Journal, Integer>
                 journal.setId(rs.getInt("journal_id"));
                 journal.setCourseId(rs.getInt("course_id"));
                 journal.setStudentId(rs.getInt("student_id"));
-                journal.setMark(rs.getInt("mark"));
+                journal.setMark(rs.getDouble("mark"));
                 list.add(journal);
             }
         } catch (SQLException e) {
@@ -74,7 +79,7 @@ public class MysqlJournalDao extends AbstractMysqlDao<Journal, Integer>
         try {
             stmt.setInt(1, object.getCourseId());
             stmt.setInt(2, object.getStudentId());
-            stmt.setInt(3, object.getMark());
+            stmt.setDouble(3, object.getMark());
         } catch (SQLException e) {
             LOGGER.error("Exception while preparing statement for create.\n", e);
         }
@@ -86,10 +91,34 @@ public class MysqlJournalDao extends AbstractMysqlDao<Journal, Integer>
         try {
             stmt.setInt(1, object.getCourseId());
             stmt.setInt(2, object.getStudentId());
-            stmt.setInt(3, object.getMark());
+            stmt.setDouble(3, object.getMark());
             stmt.setInt(4, object.getId());
         } catch (SQLException e) {
             LOGGER.error("Exception while preparing statement for update.\n", e);
         }
+    }
+
+    @Override
+    public Journal getByCourseAndStudent(Course course, User student) {
+
+        Journal journal = null;
+
+        try (Connection connection = ConnectionPool.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(Query.SELECT_JOURNAL_BY_COURSE_AND_STUDENT)) {
+
+            stmt.setInt(1, course.getId());
+            stmt.setInt(2, student.getId());
+            try {
+                journal = parseResultSet(stmt.executeQuery()).iterator().next();
+            } catch (NoSuchElementException e) {
+                LOGGER.error("Journal with courseId " + course.getId() + " and studentId " + student.getId() + " is not found.", e);
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Exception while getting selected not started courses.\n", e);
+        } catch (NullPointerException e) {
+            LOGGER.error("NPE exception while preparing statement.\n", e);
+        }
+
+        return journal;
     }
 }

@@ -8,7 +8,8 @@ import org.junit.runners.Suite;
         AddCourseCommandTest.class,
         AddSubjectCommandTest.class,
         AddUserCommandTest.class,
-        AddJournalCommandTest.class
+        AddJournalCommandTest.class,
+        AddUserCommandTest.class
 })
 public class AllCommandTests {
 

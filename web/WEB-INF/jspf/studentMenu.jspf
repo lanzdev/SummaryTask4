@@ -1,0 +1,23 @@
+<%@ include file="/WEB-INF/jspf/directive/page.jspf" %>
+<%@ include file="/WEB-INF/jspf/directive/taglib.jspf" %>
+
+<li>
+    <a href="controller?command=ListCourses&adds=new">
+        <fmt:message key="list.not_subscribed_courses"/>
+    </a>
+</li>
+<li>
+    <a href="controller?command=ListCoursesInProcess">
+        <fmt:message key="list.courses_in_process"/>
+    </a>
+</li>
+<li>
+    <a href="controller?command=ListNotStartedCourses">
+        <fmt:message key="list.not_started_courses"/>
+    </a>
+</li>
+<li>
+    <a href="controller?command=ListDoneCourses">
+        <fmt:message key="list.progress_courses"/>
+    </a>
+</li>

@@ -1,0 +1,22 @@
+<%@ include file="/WEB-INF/jspf/directive/page.jspf" %>
+<%@ include file="/WEB-INF/jspf/directive/taglib.jspf" %>
+
+<div class="menu navbar">
+    <li>
+        <a href="controller?command=PersonalArea">
+            <fmt:message key="personal_area"/>
+        </a>
+    </li>
+    <c:choose>
+        <c:when test="${user_permission == 'ADMIN'}">
+            <%@ include file="/WEB-INF/jspf/adminMenu.jspf" %>
+        </c:when>
+        <c:when test="${user_permission == 'STUDENT'}">
+            <%@ include file="/WEB-INF/jspf/studentMenu.jspf" %>
+        </c:when>
+        <c:when test="${user_permission == 'TEACHER'}">
+            <%@ include file="/WEB-INF/jspf/teacherMenu.jspf" %>
+        </c:when>
+    </c:choose>
+    </ul>
+</div>

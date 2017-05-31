@@ -27,9 +27,11 @@ public class AddJournalCommand extends FrontCommand {
     @Override
     protected String doPost( ) {
 
+        LOGGER.debug("Entering doPost()");
+
         int courseId = Integer.valueOf(request.getParameter("course_id"));
         int studentId = Integer.valueOf(request.getParameter("student_id"));
-        int mark = Integer.valueOf(request.getParameter("mark"));
+        double mark = Double.valueOf(request.getParameter("mark"));
 
         boolean valid = JournalInputValidator.validate();
 

@@ -3,4 +3,115 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
+
+    <display-name>Summary Task</display-name>
+
+    <jsp-config>
+        <taglib>
+            <taglib-uri>/WEB-INF/tlds/progress_printer</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/progress_printer.tld</taglib-location>
+        </taglib>
+    </jsp-config>
+
+    <welcome-file-list>
+        <welcome-file>login.jsp</welcome-file>
+    </welcome-file-list>
+
+    <!-- access filter -->
+
+    <filter>
+        <filter-name>AccessFilter</filter-name>
+        <filter-class>com.lanzdev.filters.AccessFilter</filter-class>
+        <init-param>
+            <param-name>admin</param-name>
+            <param-value>
+                AddCourse
+                AddSubject
+                AddUser
+                AssignTeacherForCourse
+                BlockStudent
+                DeleteCourse
+                DeleteUser
+                EditCourse
+                ListUsers
+                ListCourses
+                ListStudents
+                ListSubjects
+                UnblockStudent
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>teacher</param-name>
+            <param-value>
+                ListCoursesForEvaluation
+                Evaluate
+                ListCoursesForTeacher
+                ListCourses
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>student</param-name>
+            <param-value>
+                ListCourses
+                ListCoursesInProcess
+                ListDoneCourses
+                ListNotStartedCourses
+                SubscribeCourse
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>common</param-name>
+            <param-value>
+                Logout
+                NoCommand
+                Language
+                ListCoursesSort
+                PersonalArea
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>out_of_control</param-name>
+            <param-value>
+                Login
+            </param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>AccessFilter</filter-name>
+        <servlet-name>controller</servlet-name>
+    </filter-mapping>
+
+    <!-- encoding filter -->
+
+    <filter>
+        <filter-name>EncodingFilter</filter-name>
+        <filter-class>com.lanzdev.filters.EncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>EncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <servlet-name>controller</servlet-name>
+    </filter-mapping>
+
+    <!-- context listener -->
+
+    <listener>
+        <listener-class>com.lanzdev.listeners.ContextListener</listener-class>
+    </listener>
+
+    <!-- error page-->
+
+    <error-page>
+        <exception-type>java.lang.Throwable</exception-type>
+        <location>/WEB-INF/jsp/error_page.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/jsp/error_page.jsp</location>
+    </error-page>
+
 </web-app>

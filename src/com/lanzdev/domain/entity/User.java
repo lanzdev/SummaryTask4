@@ -5,6 +5,10 @@ import com.lanzdev.domain.Permission;
 
 import java.io.Serializable;
 
+/**
+ * Representation of user entity from db.
+ * Contains all information about user entity.
+ */
 public class User implements Identified<Integer>, Serializable {
 
     private static final long serialVersionUID = 2536432234012358753L;

@@ -5,7 +5,7 @@ import com.lanzdev.command.FrontCommand;
 import com.lanzdev.dao.entity.SubjectDao;
 import com.lanzdev.dao.mysql.impl.MysqlSubjectDao;
 import com.lanzdev.domain.entity.Subject;
-import com.lanzdev.util.validator.SubjectInputValidator;
+import com.lanzdev.util.validator.CourseNameValidator;
 import org.apache.log4j.Logger;
 
 
@@ -27,9 +27,9 @@ public class AddSubjectCommand extends FrontCommand {
     @Override
     protected String doPost( ) {
 
-        String name = request.getParameter("name");
+        String name = request.getParameter("subject_name");
 
-        boolean valid = SubjectInputValidator.validate();
+        boolean valid = CourseNameValidator.validate(name);
 
         if (valid) {
             LOGGER.trace("Fields: " + name);

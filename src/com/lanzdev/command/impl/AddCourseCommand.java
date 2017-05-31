@@ -3,14 +3,21 @@ package com.lanzdev.command.impl;
 import com.lanzdev.Path;
 import com.lanzdev.command.FrontCommand;
 import com.lanzdev.dao.entity.CourseDao;
+import com.lanzdev.dao.entity.SubjectDao;
+import com.lanzdev.dao.entity.UserDao;
 import com.lanzdev.dao.mysql.impl.MysqlCourseDao;
+import com.lanzdev.dao.mysql.impl.MysqlSubjectDao;
+import com.lanzdev.dao.mysql.impl.MysqlUserDao;
 import com.lanzdev.domain.entity.Course;
-import com.lanzdev.util.validator.CourseInputValidator;
+import com.lanzdev.domain.entity.Subject;
+import com.lanzdev.domain.entity.User;
+import com.lanzdev.util.Parser;
+import com.lanzdev.util.validator.CourseNameValidator;
+import com.lanzdev.util.validator.DateValidator;
 import org.apache.log4j.Logger;
 
 import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.util.List;
 
 public class AddCourseCommand extends FrontCommand {
 
@@ -23,6 +30,15 @@ public class AddCourseCommand extends FrontCommand {
 
         checkOnError();
 
+        SubjectDao subjectDao = new MysqlSubjectDao();
+        List<Subject> subjects = subjectDao.getAll();
+
+        UserDao userDao = new MysqlUserDao();
+        List<User> teachers = userDao.getTeachers();
+
+        request.setAttribute("subjects", subjects);
+        request.setAttribute("teachers", teachers);
+
         LOGGER.debug("Leaving doGet()");
         return Path.FORWARD_TO_ADD_COURSE_FORM;
     }
@@ -33,22 +49,13 @@ public class AddCourseCommand extends FrontCommand {
         LOGGER.debug("Entering doPost()");
 
         String courseName = request.getParameter("course_name");
-        Integer subjectId = Integer.valueOf(request.getParameter("subject_id"));
-        Integer teacherId = Integer.valueOf(request.getParameter("teacher_id"));
-        Date startDate = null;
-        Date expirationDate = null;
+        int subjectId = Integer.valueOf(request.getParameter("subject_id"));
+        int teacherId = Integer.valueOf(request.getParameter("teacher_id"));
+        Date startDate = Parser.parseDate(request.getParameter("start_date"));
+        Date expirationDate = Parser.parseDate(request.getParameter("expiration_date"));
 
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            java.util.Date date = sdf.parse(request.getParameter("start_date"));
-            startDate = new Date(date.getTime());
-            date = sdf.parse(request.getParameter("expiration_date"));
-            expirationDate = new Date(date.getTime());
-        } catch (ParseException e) {
-            LOGGER.error("Exception while parsing date.\n", e);
-        }
-
-        boolean valid = CourseInputValidator.validate();
+        boolean valid = CourseNameValidator.validate(courseName)
+                && DateValidator.validate(startDate, expirationDate);
 
         if (valid) {
             LOGGER.trace(String.format("Fields: %s, %s, %s, %s, %s",
@@ -63,7 +70,10 @@ public class AddCourseCommand extends FrontCommand {
 
             CourseDao dao = new MysqlCourseDao();
             course = dao.create(course);
-            request.setAttribute("course", course);
+
+            List<Course> list = dao.getAll();
+            request.setAttribute("courses", list);
+
             LOGGER.trace("The course with id " + course.getId() + " added.");
         } else {
             LOGGER.trace("Fields failed validation.");

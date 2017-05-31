@@ -4,6 +4,10 @@ import com.lanzdev.domain.Identified;
 
 import java.io.Serializable;
 
+/**
+ * Representation of subject entity from db.
+ * Contains all information about subject entity.
+ */
 public class Subject implements Identified<Integer>, Serializable{
 
     private static final long serialVersionUID = -6420726636733755308L;

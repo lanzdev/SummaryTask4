@@ -26,7 +26,8 @@ public class ListNotStartedCoursesCommand extends FrontCommand {
         List<Course> list = dao.getSelectedNotStartedCourses(student);
         LOGGER.trace("List of not started courses contains " + list.size() + " items.");
 
-        request.setAttribute("courses", list);
+        request.getSession().setAttribute("courses", list);
+        request.getSession().setAttribute("is_for_subscribe", false);
 
         LOGGER.debug("Leaving doGet()");
         return Path.FORWARD_TO_VIEW_COURSES_LIST;

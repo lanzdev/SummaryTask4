@@ -1,6 +1,7 @@
-package com.lanzdev.command;
+package com.lanzdev.command.impl;
 
 import com.lanzdev.Path;
+import com.lanzdev.command.FrontCommand;
 
 public class UnknownCommand extends FrontCommand {
 

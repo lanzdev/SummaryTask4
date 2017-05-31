@@ -1,6 +1,5 @@
 package com.lanzdev.domain;
 
-
 public enum Permission {
     TEACHER, STUDENT, ADMIN;
 

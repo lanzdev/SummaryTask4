@@ -52,7 +52,7 @@ public class Util {
         Journal journal = new Journal();
         journal.setCourseId(courseId);
         journal.setStudentId(studentId);
-        journal.setMark(5);
+        journal.setMark(5.0);
         return journal;
     }
 

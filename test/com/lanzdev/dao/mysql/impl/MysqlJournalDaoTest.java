@@ -64,7 +64,7 @@ public class MysqlJournalDaoTest {
         journal = new Journal();
         journal.setCourseId(course.getId());
         journal.setStudentId(student.getId());
-        journal.setMark(0);
+        journal.setMark(0.0);
     }
 
     @Test

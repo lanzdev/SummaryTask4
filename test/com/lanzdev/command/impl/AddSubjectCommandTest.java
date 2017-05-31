@@ -29,7 +29,7 @@ public class AddSubjectCommandTest extends DefaultMockito {
         dao = new MysqlSubjectDao();
         subject = Util.createSubject();
 
-        when(request.getParameter("name")).thenReturn(subject.getName());
+        when(request.getParameter("subject_name")).thenReturn(subject.getName());
     }
 
     @AfterClass

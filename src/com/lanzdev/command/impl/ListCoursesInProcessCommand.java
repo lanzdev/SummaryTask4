@@ -26,7 +26,9 @@ public class ListCoursesInProcessCommand extends FrontCommand {
         List<Course> list = dao.getSelectedCoursesInProcess(student);
         LOGGER.trace("List of courses in process contains " + list.size() + " items.");
 
-        request.setAttribute("courses", list);
+        request.getSession().setAttribute("courses", list);
+        request.getSession().setAttribute("is_for_subscribe", false);
+
 
         LOGGER.debug("Leaving doGet()");
         return Path.FORWARD_TO_VIEW_COURSES_LIST;

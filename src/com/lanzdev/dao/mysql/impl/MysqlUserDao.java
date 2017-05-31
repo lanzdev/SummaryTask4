@@ -1,5 +1,6 @@
 package com.lanzdev.dao.mysql.impl;
 
+import com.lanzdev.dao.ConnectionPool;
 import com.lanzdev.dao.entity.UserDao;
 import com.lanzdev.dao.mysql.AbstractMysqlDao;
 import com.lanzdev.dao.mysql.Query;
@@ -7,11 +8,10 @@ import com.lanzdev.domain.Permission;
 import com.lanzdev.domain.entity.User;
 import org.apache.log4j.Logger;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class MysqlUserDao extends AbstractMysqlDao<User, Integer>
         implements UserDao {
@@ -101,5 +101,98 @@ public class MysqlUserDao extends AbstractMysqlDao<User, Integer>
         } catch (SQLException e) {
             LOGGER.error("Exception while preparing statement for update.\n", e);
         }
+    }
+
+    @Override
+    public User getByLogin(String login) {
+
+        User user = null;
+
+        try (Connection connection = ConnectionPool.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(Query.SELECT_USER_BY_LOGIN)) {
+
+            stmt.setString(1, login);
+            user = parseResultSet(stmt.executeQuery()).iterator().next();
+        } catch (SQLException e) {
+            LOGGER.error("Exception while getting students.\n", e);
+        } catch (NullPointerException e) {
+            LOGGER.error("NPE exception while creating statement.\n", e);
+        } catch (NoSuchElementException e) {
+            LOGGER.error("Can't find any user with login " + login, e);
+        }
+
+        return user;
+    }
+
+    @Override
+    public List<User> getStudents( ) {
+
+        List<User> list = new ArrayList<>();
+
+        try (Connection connection = ConnectionPool.getConnection();
+             Statement stmt = connection.createStatement()) {
+
+            list = parseResultSet(stmt.executeQuery(Query.SELECT_ALL_STUDENTS));
+        } catch (SQLException e) {
+            LOGGER.error("Exception while getting students.\n", e);
+        } catch (NullPointerException e) {
+            LOGGER.error("NPE exception while creating statement.\n", e);
+        }
+
+        return list;
+    }
+
+    @Override
+    public List<User> getBlockedStudents( ) {
+
+        List<User> list = new ArrayList<>();
+
+        try (Connection connection = ConnectionPool.getConnection();
+            Statement stmt = connection.createStatement()) {
+
+            list = parseResultSet(stmt.executeQuery(Query.SELECT_BLOCKED_STUDENTS));
+        } catch (SQLException e) {
+            LOGGER.error("Exception while getting blocked students.\n", e);
+        } catch (NullPointerException e) {
+            LOGGER.error("NPE exception while creating statement.\n", e);
+        }
+
+        return list;
+    }
+
+    @Override
+    public List<User> getUnblockedStudents( ) {
+
+        List<User> list = new ArrayList<>();
+
+        try (Connection connection = ConnectionPool.getConnection();
+             Statement stmt = connection.createStatement()) {
+
+            list = parseResultSet(stmt.executeQuery(Query.SELECT_UNBLOCKED_STUDENTS));
+        } catch (SQLException e) {
+            LOGGER.error("Exception while getting unblocked students.\n", e);
+        } catch (NullPointerException e) {
+            LOGGER.error("NPE exception while creating statement.\n", e);
+        }
+
+        return list;
+    }
+
+    @Override
+    public List<User> getTeachers( ) {
+
+        List<User> list = new ArrayList<>();
+
+        try (Connection connection = ConnectionPool.getConnection();
+             Statement stmt = connection.createStatement()) {
+
+            list = parseResultSet(stmt.executeQuery(Query.SELECT_ALL_TEACHERS));
+        } catch (SQLException e) {
+            LOGGER.error("Exception while getting unblocked students.\n", e);
+        } catch (NullPointerException e) {
+            LOGGER.error("NPE exception while creating statement.\n", e);
+        }
+
+        return list;
     }
 }

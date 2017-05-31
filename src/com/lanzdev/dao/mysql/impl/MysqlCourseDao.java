@@ -4,10 +4,12 @@ import com.lanzdev.dao.ConnectionPool;
 import com.lanzdev.dao.entity.CourseDao;
 import com.lanzdev.dao.mysql.AbstractMysqlDao;
 import com.lanzdev.dao.mysql.Query;
+import com.lanzdev.domain.Permission;
 import com.lanzdev.domain.entity.Course;
 import com.lanzdev.domain.entity.Journal;
 import com.lanzdev.domain.entity.Subject;
 import com.lanzdev.domain.entity.User;
+import com.lanzdev.util.AssignCortege;
 import com.lanzdev.util.ProgressCortege;
 import org.apache.log4j.Logger;
 
@@ -64,9 +66,16 @@ public class MysqlCourseDao extends AbstractMysqlDao<Course, Integer>
                 course.setId(rs.getInt("course_id"));
                 course.setName(rs.getString("course_name"));
                 course.setSubjectId(rs.getInt("subject_id"));
+                course.setSubjectName(rs.getString("subject_name"));
                 course.setTeacherId(rs.getInt("teacher_id"));
+                course.setTeacherName(rs.getString("first_name") + " " + rs.getString("last_name"));
                 course.setStartDate(rs.getDate("start_date"));
                 course.setExpirationDate(rs.getDate("expiration_date"));
+                try {
+                    course.setSubscribedBy(rs.getInt("subscribed_by"));
+                } catch (SQLException e) {
+                    LOGGER.warn("Column 'subscribed_by' not found.");
+                }
                 list.add(course);
             }
         } catch (SQLException e) {
@@ -106,17 +115,17 @@ public class MysqlCourseDao extends AbstractMysqlDao<Course, Integer>
     }
 
     @Override
-    public List<Course> getByTeacher(int teacherId) {
+    public List<Course> getNotSubscribed(User student) {
 
         List<Course> list = new ArrayList<>();
 
         try (Connection connection = ConnectionPool.getConnection();
-             PreparedStatement stmt = connection.prepareStatement(Query.SELECT_BY_TEACHER)) {
+             PreparedStatement stmt = connection.prepareStatement(Query.SELECT_NOT_SUBSCRIBED)) {
 
-            stmt.setInt(1, teacherId);
+            stmt.setInt(1, student.getId());
             list = parseResultSet(stmt.executeQuery());
         }catch (SQLException e) {
-            LOGGER.error("Exception while getting courses by teacher.\n", e);
+            LOGGER.error("Exception while getting not subscribed courses.\n", e);
         } catch (NullPointerException e) {
             LOGGER.error("NPE exception while preparing statement.\n", e);
         }
@@ -125,17 +134,36 @@ public class MysqlCourseDao extends AbstractMysqlDao<Course, Integer>
     }
 
     @Override
-    public List<Course> getBySubject(int subjectId) {
+    public List<Course> getBySubject(Subject subject) {
 
         List<Course> list = new ArrayList<>();
 
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement stmt = connection.prepareStatement(Query.SELECT_BY_SUBJECT)) {
 
-            stmt.setInt(1, subjectId);
+            stmt.setInt(1, subject.getId());
             list = parseResultSet(stmt.executeQuery());
         } catch (SQLException e) {
             LOGGER.error("Exception while getting courses by subject.\n", e);
+        } catch (NullPointerException e) {
+            LOGGER.error("NPE exception while preparing statement.\n", e);
+        }
+
+        return list;
+    }
+
+    @Override
+    public List<Course> getByTeacher(User teacher) {
+
+        List<Course> list = new ArrayList<>();
+
+        try (Connection connection = ConnectionPool.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(Query.SELECT_BY_TEACHER)) {
+
+            stmt.setInt(1, teacher.getId());
+            list = parseResultSet(stmt.executeQuery());
+        }catch (SQLException e) {
+            LOGGER.error("Exception while getting courses by teacher.\n", e);
         } catch (NullPointerException e) {
             LOGGER.error("NPE exception while preparing statement.\n", e);
         }
@@ -182,6 +210,60 @@ public class MysqlCourseDao extends AbstractMysqlDao<Course, Integer>
     }
 
     @Override
+    public List<AssignCortege> getAssignedCourses(User teacher) {
+
+        return getAssigned(teacher, Query.SELECT_ASSIGNED_COURSES);
+    }
+
+    @Override
+    public List<AssignCortege> getAssignedWithAvgMark(User teacher) {
+
+        return getAssigned(teacher, Query.SELECT_ASSIGNED_COURSES_WITH_AVG_MARKS);
+    }
+
+    private List<AssignCortege> getAssigned(User teacher, String query) {
+
+        List<AssignCortege> list = new ArrayList<>();
+
+        try (Connection connection = ConnectionPool.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            stmt.setInt(1, teacher.getId());
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Course course = new Course();
+                course.setId(rs.getInt("course_id"));
+                course.setName(rs.getString("course_name"));
+                course.setSubjectId(rs.getInt("subject_id"));
+                course.setTeacherId(rs.getInt("teacher_id"));
+                course.setStartDate(rs.getDate("start_date"));
+                course.setExpirationDate(rs.getDate("expiration_date"));
+
+                User user = new User();
+                user.setId(rs.getInt("user_id"));
+                user.setLogin(rs.getString("login"));
+                user.setLogin(rs.getString("password"));
+                user.setPermission(Permission.getPermission(rs.getString("permission")));
+                user.setFirstName(rs.getString("first_name"));
+                user.setLastName(rs.getString("last_name"));
+
+                Journal journal = new Journal();
+                journal.setMark(rs.getDouble("mark"));
+
+                AssignCortege assignCortege = new AssignCortege(course, user, journal);
+
+                list.add(assignCortege);
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Exception while getting selected not started courses.\n", e);
+        } catch (NullPointerException e) {
+            LOGGER.error("NPE exception while preparing statement.\n", e);
+        }
+
+        return list;
+    }
+
+    @Override
     public List<ProgressCortege> getDoneCourses(User student) {
 
         List<ProgressCortege> list = new ArrayList<>();
@@ -205,7 +287,7 @@ public class MysqlCourseDao extends AbstractMysqlDao<Course, Integer>
                 journal.setId(rs.getInt("journal_id"));
                 journal.setCourseId(rs.getInt("course_id"));
                 journal.setStudentId(rs.getInt("student_id"));
-                journal.setMark(rs.getInt("mark"));
+                journal.setMark(rs.getDouble("mark"));
 
                 Subject subject = new Subject();
                 subject.setId(rs.getInt("subject_id"));

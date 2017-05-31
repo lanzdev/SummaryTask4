@@ -1,0 +1,13 @@
+<%@ include file="/WEB-INF/jspf/directive/page.jspf" %>
+<%@ include file="/WEB-INF/jspf/directive/taglib.jspf" %>
+
+<li>
+    <a href="controller?command=ListCoursesForEvaluation">
+        <fmt:message key="list.courses_for_evaluation"/>
+    </a>
+</li>
+<li>
+    <a href="controller?command=ListCoursesForTeacher">
+        <fmt:message key="list.teachers_courses"/>
+    </a>
+</li>

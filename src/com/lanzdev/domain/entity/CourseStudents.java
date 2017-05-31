@@ -4,6 +4,10 @@ import com.lanzdev.domain.Identified;
 
 import java.io.Serializable;
 
+/**
+ * Representation of course-students entity from db.
+ * Contains all information about course-students entity.
+ */
 public class CourseStudents implements Identified<Integer>, Serializable {
 
     private static final long serialVersionUID = 7448332893760650228L;

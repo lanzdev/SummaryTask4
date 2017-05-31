@@ -51,7 +51,7 @@ public class AddCourseCommandTest extends DefaultMockito {
         teacher = userDao.create(teacher);
         course = Util.createCourse(subject.getId(), teacher.getId());
 
-        when(request.getParameter("name")).thenReturn(course.getName());
+        when(request.getParameter("course_name")).thenReturn(course.getName());
         when(request.getParameter("subject_id")).thenReturn(String.valueOf(course.getSubjectId()));
         when(request.getParameter("teacher_id")).thenReturn(String.valueOf(course.getTeacherId()));
         when(request.getParameter("start_date")).thenReturn(String.valueOf(course.getStartDate()));

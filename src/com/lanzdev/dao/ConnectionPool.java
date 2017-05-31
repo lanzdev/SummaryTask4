@@ -17,6 +17,7 @@ public class ConnectionPool {
 
     private ConnectionPool() throws PropertyVetoException {
 
+        LOGGER.debug("Entering connectionPool()");
         cpds = new ComboPooledDataSource();
 
         cpds.setDriverClass(BuildVars.DRIVER_DB);
@@ -32,10 +33,15 @@ public class ConnectionPool {
         cpds.setIdleConnectionTestPeriod(300);
         cpds.setMaxIdleTimeExcessConnections(240);
 
+        System.setProperty("com.mchange.v2.log.MLog", "com.mchange.v2.log.FallbackMLog");
+        System.setProperty("com.mchange.v2.log.FallbackMLog.DEFAULT_CUTOFF_LEVEL", "WARNING");
+
+        LOGGER.debug("Leaving connectionPool()");
     }
 
     public static Connection getConnection() {
 
+        LOGGER.debug("Entering getConnection()");
         if (connectionPool == null) {
             try {
                 connectionPool = new ConnectionPool();

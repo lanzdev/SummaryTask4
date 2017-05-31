@@ -1,0 +1,43 @@
+<%@ include file="/WEB-INF/jspf/directive/page.jspf" %>
+<%@ include file="/WEB-INF/jspf/directive/taglib.jspf" %>
+
+<li>
+    <a href="controller?command=ListUsers">
+        <fmt:message key="list.users"/>
+    </a>
+</li>
+<li>
+    <a href="controller?command=ListSubjects">
+        <fmt:message key="list.subjects"/>
+    </a>
+</li>
+<li>
+    <a href="controller?command=ListCourses">
+        <fmt:message key="list.courses"/>
+    </a>
+</li>
+<li>
+    <a href="controller?command=AddUser&desired_permission=teacher">
+        <fmt:message key="admin_menu.button.add_user"/>
+    </a>
+</li>
+<li>
+    <a href="controller?command=AddSubject">
+        <fmt:message key="admin_menu.button.add_subject"/>
+    </a>
+</li>
+<li>
+    <a href="controller?command=AddCourse">
+        <fmt:message key="admin_menu.button.add_course"/>
+    </a>
+</li>
+<li>
+    <a href="controller?command=BlockStudent">
+        <fmt:message key="admin_menu.button.block_student"/>
+    </a>
+</li>
+<li>
+    <a href="controller?command=UnblockStudent">
+        <fmt:message key="admin_menu.button.unblock_student"/>
+    </a>
+</li>

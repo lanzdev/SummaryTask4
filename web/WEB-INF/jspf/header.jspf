@@ -1,0 +1,47 @@
+<%@ include file="/WEB-INF/jspf/directive/page.jspf" %>
+<%@ include file="/WEB-INF/jspf/directive/taglib.jspf" %>
+
+<div class="header">
+
+    <div class="header-container">
+        <h2><fmt:message key="header.title"/></h2>
+
+
+        <div class="right">
+
+            <div class="lang-list">
+
+                <ul class="lang">
+                    <li>
+                        <form action="controller" method="post">
+                            <input type="hidden" name="command" value="Language"/>
+                            <input type="hidden" name="language" value="en"/>
+                            <input type="hidden" name=url value="${requestScope['javax.servlet.forward.query_string']}">
+                            <input type="image" src="/image/en.png" alt="English">
+                        </form>
+                    </li>
+                    <li>
+                        <form action="controller" method="post">
+                            <input type="hidden" name="command" value="Language">
+                            <input type="hidden" name="language" value="ru">
+                            <input type="hidden" name=url value="${requestScope['javax.servlet.forward.query_string']}">
+                            <input type="image" src="/image/ru.png" alt="Russian">
+                        </form>
+                    </li>
+                </ul>
+
+                <c:if test="${not empty user_permission}">
+                    <b><c:out value="${user.firstName} ${user.lastName} (${user.permission})"/></b>
+                    <a href="controller?command=Logout"><fmt:message key="header.logout"/></a>
+                </c:if>
+
+                <c:if test="${empty user_permission}">
+                    <a href="controller?command=Login"><fmt:message key="header.login"/></a>
+                </c:if>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
